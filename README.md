@@ -1,11 +1,5 @@
 # Kubernetes Fundamentals
 
-[![Image](https://stacksimplify.com/course-images/AWS-EKS-Kubernetes-Masterclass-DevOps-Microservices-course.png "AWS EKS Kubernetes - Masterclass")](https://www.udemy.com/course/aws-eks-kubernetes-masterclass-devops-microservices/?referralCode=257C9AD5B5AF8D12D1E1)
-
-## Udemy 무료 강의 2종
-- [AWS Cloud에서 쿠버네티스 완전 초보자용 | 파트 1](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-1)
-- [AWS Cloud에서 쿠버네티스 완전 초보자용 | 파트 2](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-2)
-
 ## 목차
 
 | 번호 | 학습 내용 |
@@ -126,14 +120,3 @@
 - AWS EKS로 Kubernetes를 처음 접하는 입문자
 - EKS 기반 운영을 준비하는 AWS 아키텍트/시스템 관리자/개발자
 
-## 강의 특징
-- 단계별 실습 중심 학습
-- 실제 환경에서 활용 가능한 예제 제공
-- Q&A 지원
-- 30일 환불 정책
-
-## 다른 AWS 강의
-- [Udemy Enroll](https://github.com/stacksimplify/udemy-enroll)
-
-## Stack Simplify Udemy 프로필
-- [Udemy Profile](https://www.udemy.com/user/kalyan-reddy-9/)
