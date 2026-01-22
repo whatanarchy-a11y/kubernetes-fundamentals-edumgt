@@ -1,30 +1,34 @@
-# Deployments with YAML
+# YAML로 Deployment 만들기
 
-## Step-01: Copy templates from ReplicaSet
-- Copy templates from ReplicaSet and change the `kind: Deployment` 
-- Update Container Image version to `3.0.0`
-- Update NodePort service `nodePort: 31233`
-- Change all names to Deployment
-- Change all labels and selectors to `myapp3`
+## Step-01: ReplicaSet 템플릿 재사용
+- ReplicaSet 템플릿을 복사해 `kind: Deployment`로 변경합니다.
+- 컨테이너 이미지 버전을 `3.0.0`으로 업데이트합니다.
+- NodePort Service의 `nodePort`를 `31233`으로 변경합니다.
+- 이름 및 라벨/셀렉터를 `myapp3`로 통일합니다.
 
 ```
-# Create Deployment
+# Deployment 생성
 kubectl apply -f 02-deployment-definition.yml
 kubectl get deploy
 kubectl get rs
 kubectl get po
 
-# Create NodePort Service
+# NodePort Service 생성
 kubectl apply -f 03-deployment-nodeport-service.yml
 
-# List Service
+# Service 목록 확인
 kubectl get svc
 
-# Get Public IP
+# Public IP 확인
 kubectl get nodes -o wide
 
-# Access Application
+# 애플리케이션 접근
 http://<Worker-Node-Public-IP>:31233
 ```
-## API References
+
+## API 레퍼런스
 - **Deployment:** https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#deployment-v1-apps
+
+## 추가 설명
+- Deployment는 ReplicaSet을 자동으로 관리하며 롤링 업데이트를 제공합니다.
+- 라벨/셀렉터 불일치는 Pod가 Service에 연결되지 않는 주요 원인입니다.

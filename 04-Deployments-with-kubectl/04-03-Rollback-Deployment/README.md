@@ -1,40 +1,39 @@
-# Rollback Deployment
+# Deployment 롤백
 
-## Step-00: Introduction
-- We can rollback a deployment in two ways.
-  - Previous Version
-  - Specific Version
+## Step-00: 소개
+- Deployment 롤백 방식
+  - 이전 버전으로 롤백
+  - 특정 버전으로 롤백
 
-## Step-01: Rollback a Deployment to previous version
+## Step-01: 이전 버전으로 롤백
 
-### Check the Rollout History of a Deployment
+### 롤아웃 히스토리 확인
 ```
-# List Deployment Rollout History
+# Deployment 롤아웃 히스토리
 kubectl rollout history deployment/<Deployment-Name>
-kubectl rollout history deployment/my-first-deployment  
+kubectl rollout history deployment/my-first-deployment
 ```
 
-### Verify changes in each revision
-- **Observation:** Review the "Annotations" and "Image" tags for clear understanding about changes.
+### 각 revision 변경 사항 확인
+- **관찰 포인트:** "Annotations"와 "Image"를 비교해 변경 내용을 확인합니다.
 ```
-# List Deployment History with revision information
+# revision별 상세 히스토리 확인
 kubectl rollout history deployment/my-first-deployment --revision=1
 kubectl rollout history deployment/my-first-deployment --revision=2
 kubectl rollout history deployment/my-first-deployment --revision=3
 ```
 
-
-### Rollback to previous version
-- **Observation:** If we rollback, it will go back to revision-2 and its number increases to revision-4
+### 이전 버전으로 롤백
+- **관찰 포인트:** 롤백 시 revision 번호가 증가합니다.
 ```
-# Undo Deployment
+# Deployment 롤백
 kubectl rollout undo deployment/my-first-deployment
 
-# List Deployment Rollout History
-kubectl rollout history deployment/my-first-deployment  
+# 롤아웃 히스토리 확인
+kubectl rollout history deployment/my-first-deployment
 ```
 
-### Verify Deployment, Pods, ReplicaSets
+### Deployment/Pod/ReplicaSet 확인
 ```
 kubectl get deploy
 kubectl get rs
@@ -42,65 +41,69 @@ kubectl get po
 kubectl describe deploy my-first-deployment
 ```
 
-### Access the Application using Public IP
-- We should see `Application Version:V2` whenever we access the application in browser
+### 애플리케이션 접근
+- 브라우저에서 `Application Version:V2`가 표시되는지 확인합니다.
 ```
-# Get NodePort
+# NodePort 확인
 kubectl get svc
-Observation: Make a note of port which starts with 3 (Example: 80:3xxxx/TCP). Capture the port 3xxxx and use it in application URL below. 
+Observation: 3으로 시작하는 포트(예: 80:3xxxx/TCP)를 확인하세요.
 
-# Get Public IP of Worker Nodes
+# 워커 노드 Public IP 확인
 kubectl get nodes -o wide
-Observation: Make a note of "EXTERNAL-IP" if your Kubernetes cluster is setup on AWS EKS.
+Observation: AWS EKS 환경에서는 EXTERNAL-IP를 확인하세요.
 
-# Application URL
+# 애플리케이션 URL
 http://<worker-node-public-ip>:<Node-Port>
 ```
 
+## Step-02: 특정 revision으로 롤백
 
-## Step-02: Rollback to specific revision
-### Check the Rollout History of a Deployment
+### 롤아웃 히스토리 확인
 ```
-# List Deployment Rollout History
+# Deployment 롤아웃 히스토리
 kubectl rollout history deployment/<Deployment-Name>
-kubectl rollout history deployment/my-first-deployment 
+kubectl rollout history deployment/my-first-deployment
 ```
-### Rollback to specific revision
+
+### 특정 revision으로 롤백
 ```
-# Rollback Deployment to Specific Revision
+# 특정 revision으로 롤백
 kubectl rollout undo deployment/my-first-deployment --to-revision=3
 ```
 
-### List Deployment History
-- **Observation:** If we rollback to revision 3, it will go back to revision-3 and its number increases to revision-5 in rollout history
+### 히스토리 확인
+- **관찰 포인트:** revision 번호가 증가하며 히스토리에 기록됩니다.
 ```
-# List Deployment Rollout History
-kubectl rollout history deployment/my-first-deployment  
+# Deployment 롤아웃 히스토리
+kubectl rollout history deployment/my-first-deployment
 ```
 
-
-### Access the Application using Public IP
-- We should see `Application Version:V3` whenever we access the application in browser
+### 애플리케이션 접근
+- 브라우저에서 `Application Version:V3`가 표시되는지 확인합니다.
 ```
-# Get NodePort
+# NodePort 확인
 kubectl get svc
-Observation: Make a note of port which starts with 3 (Example: 80:3xxxx/TCP). Capture the port 3xxxx and use it in application URL below. 
+Observation: 3으로 시작하는 포트(예: 80:3xxxx/TCP)를 확인하세요.
 
-# Get Public IP of Worker Nodes
+# 워커 노드 Public IP 확인
 kubectl get nodes -o wide
-Observation: Make a note of "EXTERNAL-IP" if your Kubernetes cluster is setup on AWS EKS.
+Observation: AWS EKS 환경에서는 EXTERNAL-IP를 확인하세요.
 
-# Application URL
+# 애플리케이션 URL
 http://<worker-node-public-ip>:<Node-Port>
 ```
 
-## Step-03: Rolling Restarts of Application
-- Rolling restarts will kill the existing pods and recreate new pods in a rolling fashion. 
+## Step-03: 롤링 재시작
+- 롤링 재시작은 기존 Pod를 순차적으로 종료하고 새 Pod를 생성합니다.
 ```
-# Rolling Restarts
+# 롤링 재시작
 kubectl rollout restart deployment/<Deployment-Name>
 kubectl rollout restart deployment/my-first-deployment
 
-# Get list of Pods
+# Pod 목록 확인
 kubectl get po
 ```
+
+## 추가 설명
+- 롤백은 잘못된 이미지 배포나 설정 오류 발생 시 빠른 복구를 지원합니다.
+- 운영 환경에서는 롤백 전후 메트릭/로그 확인이 중요합니다.

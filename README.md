@@ -1,143 +1,142 @@
 ## docker build . -t myimage
 ## docker run -it -p 80:80 -p 443:443 -e HELLO="hello world!" docker-image-id
 
-
 # Kubernetes Fundamentals
 
 [![Image](https://stacksimplify.com/course-images/AWS-EKS-Kubernetes-Masterclass-DevOps-Microservices-course.png "AWS EKS Kubernetes - Masterclass")](https://www.udemy.com/course/aws-eks-kubernetes-masterclass-devops-microservices/?referralCode=257C9AD5B5AF8D12D1E1)
 
-## Two FREE Courses on Udemy
-- [Kubernetes for Absolute Beginners on AWS Cloud | Part-1](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-1)
-- [Kubernetes for Absolute Beginners on AWS Cloud | Part-2](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-2)
+## Udemy 무료 강의 2종
+- [AWS Cloud에서 쿠버네티스 완전 초보자용 | 파트 1](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-1)
+- [AWS Cloud에서 쿠버네티스 완전 초보자용 | 파트 2](https://www.udemy.com/course/kubernetes-for-absolute-beginners-on-aws-cloud-part-2)
 
-## Contents
+## 목차
 
-| S.No | Course Contents |
-| ---- | --------------- |
-| 1. | Kubernetes Architecture  |
-| 2. | Pods with kubectl  |
-| 3. | ReplicaSets with kubectl  |
-| 4. | Deployments with kubectl  |
-| 5. | Services with kubectl  |
-| 6. | YAML Basics  |
-| 7. | Pods with YAML  |
-| 8. | ReplicaSets with YAML  |
-| 9. | Deployments with YAML  |
-| 10. | Services with YAML  |
+| 번호 | 학습 내용 |
+| ---- | --------- |
+| 1. | Kubernetes 아키텍처 |
+| 2. | kubectl로 Pod 다루기 |
+| 3. | kubectl로 ReplicaSet 다루기 |
+| 4. | kubectl로 Deployment 다루기 |
+| 5. | kubectl로 Service 다루기 |
+| 6. | YAML 기본 문법 |
+| 7. | YAML로 Pod 생성 |
+| 8. | YAML로 ReplicaSet 생성 |
+| 9. | YAML로 Deployment 생성 |
+| 10. | YAML로 Service 생성 |
 
-## Imperative & Declarative Approach
+## 선언형(Declarative) vs 명령형(Imperative)
 - Pods
 - ReplicaSets
 - Deployments
 - Services
 
-## List of Docker Images
+> **추가 설명**
+> - 명령형은 `kubectl run`, `kubectl expose`처럼 즉시 실행 가능한 명령으로 리소스를 만드는 방식입니다.
+> - 선언형은 YAML 매니페스트로 원하는 상태(desired state)를 정의하고 `kubectl apply -f`로 적용합니다.
+> - 이 레포는 두 방식을 모두 다루며, 실제 운영 환경에서는 선언형 방식을 권장합니다.
 
-| Application Name  | Docker Image Name |
-| ----------------- | ----------------- |
-| Simple Nginx V1  | stacksimplify/kubenginx:1.0.0  |
-| Spring Boot Hello World API  | stacksimplify/kube-helloworld:1.0.0  |
-| Simple Nginx V2  | stacksimplify/kubenginx:2.0.0  |
-| Simple Nginx V3  | stacksimplify/kubenginx:3.0.0  |
-| Simple Nginx V4  | stacksimplify/kubenginx:4.0.0  |
-| Backend Application  | stacksimplify/kube-helloworld:1.0.0  |
-| Frontend Application  | stacksimplify/kube-frontend-nginx:1.0.0  |
+## Docker 이미지 목록
 
-## Kuberentes Fundamentals - Step by Step
+| 애플리케이션 | Docker 이미지 |
+| ----------- | ------------ |
+| Simple Nginx V1 | stacksimplify/kubenginx:1.0.0 |
+| Spring Boot Hello World API | stacksimplify/kube-helloworld:1.0.0 |
+| Simple Nginx V2 | stacksimplify/kubenginx:2.0.0 |
+| Simple Nginx V3 | stacksimplify/kubenginx:3.0.0 |
+| Simple Nginx V4 | stacksimplify/kubenginx:4.0.0 |
+| Backend Application | stacksimplify/kube-helloworld:1.0.0 |
+| Frontend Application | stacksimplify/kube-frontend-nginx:1.0.0 |
 
-### EKS -  Install AWS CLI, kubectl CLI and eksctl CLI
-- **Step-01:** CLI's Introduction
-- **Step-02:** Install AWS CLI
-- **Step-03:** Install kubectl CLI
-- **Step-04:** Install eksctl CLI
+## Kubernetes Fundamentals - 단계별 로드맵
 
-### EKS - Create Cluster using eksctl
-- **Step-01:** EKS Cluster Introduction
-- **Step-02:** Create EKS Cluster
-- **Step-03:** Create IAM OIDC Provider and Managed Node Group in Public Subnets
-- **Step-04:** Verify EKS Cluster Node Groups
+### EKS - AWS CLI, kubectl, eksctl 설치
+- **Step-01:** CLI 소개 및 역할 이해
+- **Step-02:** AWS CLI 설치 및 기본 설정
+- **Step-03:** kubectl CLI 설치 및 클러스터 접근 구성
+- **Step-04:** eksctl CLI 설치 및 EKS 관리 준비
 
-### EKS Cluster Pricing Note and Delete Cluster
-- **Step-01:** EKS Cluster Pricing Note
-- **Step-02:** Delete EKS Cluster Node Group
+### EKS - eksctl로 클러스터 생성
+- **Step-01:** EKS 클러스터 구성 요소 이해
+- **Step-02:** EKS 클러스터 생성
+- **Step-03:** IAM OIDC Provider 및 퍼블릭 서브넷의 Managed Node Group 생성
+- **Step-04:** 노드 그룹 상태 확인
+
+### EKS 비용 메모 및 클러스터 삭제
+- **Step-01:** EKS 비용 구조 간단 정리 (컨트롤 플레인/노드)
+- **Step-02:** EKS 노드 그룹 삭제 절차
 
 ### Kubernetes Architecture
-- **Step-01:** Kubernetes Architecture
-- **Step-02:** Kubernetes vs AWS EKS Architecture
-- **Step-03:** Kubernetes Fundamentals - Introduction
+- **Step-01:** Kubernetes 아키텍처 개요
+- **Step-02:** Kubernetes vs AWS EKS 아키텍처 비교
+- **Step-03:** Kubernetes Fundamentals 소개
 
-### Kubernetes - Pods with kubectl
-- **Step-01:** Pods Introduction
-- **Step-02:** Pods Demo
-- **Step-03:** Node Port Service Introduction
-- **Step-04:** Node Port Service and Pods Demo
-- **Step-05:** Interact with Pod - Connect to contianer in a pod
-- **Step-06:** Delete Pod
+### Kubernetes - kubectl로 Pod 다루기
+- **Step-01:** Pod 소개 (단일/멀티 컨테이너)
+- **Step-02:** Pod 생성/조회/삭제 데모
+- **Step-03:** NodePort Service 개념 소개
+- **Step-04:** NodePort Service로 외부 접근 데모
+- **Step-05:** Pod 내부 접근 및 컨테이너 로그 확인
+- **Step-06:** Pod 삭제
 
-### Kubernetes - ReplicaSets with kubectl
-- **Step-01:** ReplicaSet Introduction
-- **Step-02:** Create ReplicaSet
-- **Step-03:** Expose and Perform High Availability Tests and Delete ReplicaSet
+### Kubernetes - kubectl로 ReplicaSet 다루기
+- **Step-01:** ReplicaSet 개념 소개
+- **Step-02:** ReplicaSet 생성 및 스케일링
+- **Step-03:** 서비스 노출 및 고가용성 테스트 후 삭제
 
-### Kubernetes - Deployments with kubectl
-- **Step-02:** Deployments Demo
-- **Step-03:** Update Deployment using Set Image Option
-- **Step-04:** Edit Deployment using kubectl edit
-- **Step-05:** Rollback Application to Previous Version - Undo Deployment
-- **Step-06:** Pause and Resume Deployments
+### Kubernetes - kubectl로 Deployment 다루기
+- **Step-02:** Deployment 생성 데모
+- **Step-03:** set image로 이미지 업데이트
+- **Step-04:** kubectl edit로 설정 수정
+- **Step-05:** 롤백(Undo)로 이전 버전 복구
+- **Step-06:** Deployment 일시 정지/재개
 
-### Kubernetes - Services with kubectl
-- **Step-01:** Services Introduction
-- **Step-02:** Services Demo
+### Kubernetes - kubectl로 Service 다루기
+- **Step-01:** Service 개요
+- **Step-02:** Service 생성/검증 데모
 
 ### YAML Basics
-- **Step-01:** Introduction to Kubernetes Declarative Approach
-- **Step-02:** YAML Basics
+- **Step-01:** 선언형 접근 소개
+- **Step-02:** YAML 기본 문법 요약
 
-### Kubernetes - Pods with YAML
-- **Step-01:** Create Pod Manifest in YAML
-- **Step-02:** Create Node Port Service & Test
+### Kubernetes - YAML로 Pod 다루기
+- **Step-01:** Pod 매니페스트 작성 및 적용
+- **Step-02:** NodePort Service 생성 및 테스트
 
-### Kubernetes - ReplicaSets with YAML
-- **Step-01:** Create ReplicaSet Manifests with YAML
-- **Step-02:** Create Node Port Service & Test
+### Kubernetes - YAML로 ReplicaSet 다루기
+- **Step-01:** ReplicaSet 매니페스트 작성 및 적용
+- **Step-02:** NodePort Service 생성 및 테스트
 
-### Kubernetes - Deployments with YAML
-- **Step-01:** Create Deployment Manifest, Deploy & Test
+### Kubernetes - YAML로 Deployment 다루기
+- **Step-01:** Deployment 매니페스트 작성/배포/테스트
 
-### Kubernetes - Services with YAML
-- **Step-01:** Backend Application - Create Deployment and ClusterIP Service
-- **Step-02:** Frontend Application - Create Deployment and NodePort Service
-- **Step-03:** Deploy and Test - Frontend and Backend Applications
+### Kubernetes - YAML로 Service 다루기
+- **Step-01:** Backend 애플리케이션용 Deployment + ClusterIP Service 생성
+- **Step-02:** Frontend 애플리케이션용 Deployment + NodePort Service 생성
+- **Step-03:** Frontend/Backend 통합 테스트
 
+## 이 과정에서 배우는 것
+- kubectl로 Pods, ReplicaSets, Deployments, Services를 생성/관리하는 방법
+- YAML로 Kubernetes 매니페스트를 작성하는 방법
+- Kubernetes의 명령형/선언형 접근 방식 비교
+- eksctl을 사용해 AWS EKS 클러스터를 생성하는 방법
+- 실습을 통해 kubectl 주요 명령을 익히는 방법
 
-## What will students learn in your course?
-- You will learn creating Pods, ReplicaSets, Deployments and Services using kubectl
-- You will learn creating Pods, ReplicaSets, Deployments and Services using YAML
-- You will write kubernetes manifests using YAML with confidence after going through live template writing sections
-- You will learn Kubernetes Fundamentals in both imperative and declarative approaches
-- You will learn to create AWS EKS Cluster using eksctl CLI
-- You will master many kubectl commands over the process
-- You will have step by step instructions documented using github repository
+## 사전 요구사항
+- 실습을 위해 AWS 계정이 필요합니다.
+- Kubernetes를 처음 접하더라도 따라올 수 있도록 기초부터 설명합니다.
 
-## Are there any course requirements or prerequisites?
-- You must have an AWS account to follow with me for hands-on activities.
-- You dont need to have any basic kubernetes knowledge to start this course.  
+## 대상 학습자
+- AWS EKS로 Kubernetes를 처음 접하는 입문자
+- EKS 기반 운영을 준비하는 AWS 아키텍트/시스템 관리자/개발자
 
+## 강의 특징
+- 단계별 실습 중심 학습
+- 실제 환경에서 활용 가능한 예제 제공
+- Q&A 지원
+- 30일 환불 정책
 
-## Who are your target students?
-- Any beginner who is interested in learning kubernetes on cloud using AWS EKS. 
-- AWS Architects or Sysadmins or Developers who are planning to master Elastic Kubernetes Service (EKS) for running applications on Kubernetes
-
-## Each of my courses come with
-- Amazing Hands-on Step By Step Learning Experiences
-- Real Implementation Experience
-- Friendly Support in the Q&A section
-- 30 Day "No Questions Asked" Money Back Guarantee!
-
-## My Other AWS Courses
+## 다른 AWS 강의
 - [Udemy Enroll](https://github.com/stacksimplify/udemy-enroll)
 
-## Stack Simplify Udemy Profile
+## Stack Simplify Udemy 프로필
 - [Udemy Profile](https://www.udemy.com/user/kalyan-reddy-9/)
-

@@ -1,131 +1,135 @@
-# Kubernetes - Update Deployments
+# Kubernetes - Deployment 업데이트
 
-## Step-00: Introduction
-- We can update deployments using two options
-  - Set Image
-  - Edit Deployment
+## Step-00: 소개
+- Deployment 업데이트 방법 두 가지
+  - `set image` 명령으로 이미지 변경
+  - `kubectl edit`로 선언형 수정
 
-## Step-01: Updating Application version V1 to V2 using "Set Image" Option
-### Update Deployment
-- **Observation:** Please Check the container name in `spec.container.name` yaml output and make a note of it and 
-replace in `kubectl set image` command <Container-Name>
+## Step-01: "set image"로 V1 -> V2 업데이트
+
+### Deployment 업데이트
+- **관찰 포인트:** `spec.template.spec.containers[].name` 값을 확인해 `kubectl set image`에 사용합니다.
 ```
-# Get Container Name from current deployment
+# 현재 Deployment의 컨테이너 이름 확인
 kubectl get deployment my-first-deployment -o yaml
 
-# Update Deployment - SHOULD WORK NOW
+# Deployment 업데이트
 kubectl set image deployment/<Deployment-Name> <Container-Name>=<Container-Image> --record=true
 kubectl set image deployment/my-first-deployment kubenginx=stacksimplify/kubenginx:2.0.0 --record=true
 ```
-### Verify Rollout Status (Deployment Status)
-- **Observation:** By default, rollout happens in a rolling update model, so no downtime.
+
+### 롤아웃 상태 확인
+- **관찰 포인트:** 기본적으로 롤링 업데이트이므로 다운타임 없이 배포됩니다.
 ```
-# Verify Rollout Status 
+# 롤아웃 상태 확인
 kubectl rollout status deployment/my-first-deployment
 
-# Verify Deployment
+# Deployment 확인
 kubectl get deploy
 ```
-### Describe Deployment
-- **Observation:**
-  - Verify the Events and understand that Kubernetes by default do  "Rolling Update"  for new application releases. 
-  - With that said, we will not have downtime for our application.
+
+### Deployment 상세 확인
+- **관찰 포인트:** 이벤트(Event)에서 롤링 업데이트가 진행되는지 확인합니다.
 ```
-# Descibe Deployment
+# Deployment 상세 확인
 kubectl describe deployment my-first-deployment
 ```
-### Verify ReplicaSet
-- **Observation:** New ReplicaSet will be created for new version
+
+### ReplicaSet 확인
+- **관찰 포인트:** 새 버전의 ReplicaSet이 생성됩니다.
 ```
-# Verify ReplicaSet
+# ReplicaSet 확인
 kubectl get rs
 ```
 
-### Verify Pods
-- **Observation:** Pod template hash label of new replicaset should be present for PODs letting us 
-know these pods belong to new ReplicaSet.
+### Pod 확인
+- **관찰 포인트:** 새 ReplicaSet의 해시 라벨을 가진 Pod가 생성됩니다.
 ```
-# List Pods
+# Pod 목록 확인
 kubectl get po
 ```
 
-### Verify Rollout History of a Deployment
-- **Observation:** We have the rollout history, so we can switch back to older revisions using 
-revision history available to us.  
-
+### 롤아웃 히스토리 확인
+- **관찰 포인트:** 롤백 시 필요한 revision 정보가 기록됩니다.
 ```
-# Check the Rollout History of a Deployment
+# Deployment 롤아웃 히스토리 확인
 kubectl rollout history deployment/<Deployment-Name>
-kubectl rollout history deployment/my-first-deployment  
+kubectl rollout history deployment/my-first-deployment
 ```
 
-### Access the Application using Public IP
-- We should see `Application Version:V2` whenever we access the application in browser
+### 애플리케이션 접근
+- 브라우저에서 `Application Version:V2`가 표시되는지 확인합니다.
 ```
-# Get NodePort
+# NodePort 확인
 kubectl get svc
-Observation: Make a note of port which starts with 3 (Example: 80:3xxxx/TCP). Capture the port 3xxxx and use it in application URL below. 
+Observation: 3으로 시작하는 포트(예: 80:3xxxx/TCP)를 확인하세요.
 
-# Get Public IP of Worker Nodes
+# 워커 노드 Public IP 확인
 kubectl get nodes -o wide
-Observation: Make a note of "EXTERNAL-IP" if your Kubernetes cluster is setup on AWS EKS.
+Observation: AWS EKS 환경에서는 EXTERNAL-IP를 확인하세요.
 
-# Application URL
+# 애플리케이션 URL
 http://<worker-node-public-ip>:<Node-Port>
 ```
 
+## Step-02: "edit"로 V2 -> V3 업데이트
 
-## Step-02: Update the Application from V2 to V3 using "Edit Deployment" Option
-### Edit Deployment
+### Deployment 편집
 ```
-# Edit Deployment
+# Deployment 편집
 kubectl edit deployment/<Deployment-Name> --record=true
 kubectl edit deployment/my-first-deployment --record=true
 ```
 
 ```yml
-# Change From 2.0.0
+# 변경 전 2.0.0
     spec:
       containers:
       - image: stacksimplify/kubenginx:2.0.0
 
-# Change To 3.0.0
+# 변경 후 3.0.0
     spec:
       containers:
       - image: stacksimplify/kubenginx:3.0.0
 ```
 
-### Verify Rollout Status
-- **Observation:** Rollout happens in a rolling update model, so no downtime.
+### 롤아웃 상태 확인
+- **관찰 포인트:** 롤링 업데이트로 다운타임 없이 배포됩니다.
 ```
-# Verify Rollout Status 
+# 롤아웃 상태 확인
 kubectl rollout status deployment/my-first-deployment
 ```
-### Verify Replicasets
-- **Observation:**  We should see 3 ReplicaSets now, as we have updated our application to 3rd version 3.0.0
+
+### ReplicaSet 확인
+- **관찰 포인트:** 버전별 ReplicaSet이 추가되어 3개가 보일 수 있습니다.
 ```
-# Verify ReplicaSet and Pods
+# ReplicaSet/Pod 확인
 kubectl get rs
 kubectl get po
 ```
-### Verify Rollout History
+
+### 롤아웃 히스토리 확인
 ```
-# Check the Rollout History of a Deployment
+# Deployment 롤아웃 히스토리 확인
 kubectl rollout history deployment/<Deployment-Name>
-kubectl rollout history deployment/my-first-deployment   
+kubectl rollout history deployment/my-first-deployment
 ```
 
-### Access the Application using Public IP
-- We should see `Application Version:V3` whenever we access the application in browser
+### 애플리케이션 접근
+- 브라우저에서 `Application Version:V3`가 표시되는지 확인합니다.
 ```
-# Get NodePort
+# NodePort 확인
 kubectl get svc
-Observation: Make a note of port which starts with 3 (Example: 80:3xxxx/TCP). Capture the port 3xxxx and use it in application URL below. 
+Observation: 3으로 시작하는 포트(예: 80:3xxxx/TCP)를 확인하세요.
 
-# Get Public IP of Worker Nodes
+# 워커 노드 Public IP 확인
 kubectl get nodes -o wide
-Observation: Make a note of "EXTERNAL-IP" if your Kubernetes cluster is setup on AWS EKS.
+Observation: AWS EKS 환경에서는 EXTERNAL-IP를 확인하세요.
 
-# Application URL
+# 애플리케이션 URL
 http://<worker-node-public-ip>:<Node-Port>
 ```
+
+## 추가 설명
+- `--record=true` 옵션은 변경 이력을 남겨 롤백 시 도움이 됩니다.
+- 실제 운영에서는 `kubectl apply -f`를 통한 선언형 업데이트가 더 안전합니다.

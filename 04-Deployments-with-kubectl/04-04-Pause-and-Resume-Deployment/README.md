@@ -1,75 +1,81 @@
-# Pause & Resume Deployments
+# Deployment 일시정지(Pause) & 재개(Resume)
 
-## Step-00: Introduction
-- Why do we need Pausing & Resuming Deployments?
-  - If we want to make multiple changes to our Deployment, we can pause the deployment make all changes and resume it. 
-- We are going to update our Application Version from **V3 to V4** as part of learning "Pause and Resume Deployments"  
+## Step-00: 소개
+- **왜 Pause/Resume이 필요한가?**
+  - 여러 변경 사항을 한 번에 적용하기 전에 배포를 잠시 멈춰 일괄 업데이트할 수 있습니다.
+- 이 실습에서는 애플리케이션 버전을 **V3 -> V4**로 업데이트합니다.
 
-## Step-01: Pausing & Resuming Deployments
-### Check current State of Deployment & Application
- ```
-# Check the Rollout History of a Deployment
-kubectl rollout history deployment/my-first-deployment  
-Observation: Make a note of last version number
+## Step-01: Deployment 일시정지/재개
 
-# Get list of ReplicaSets
+### 현재 Deployment/애플리케이션 상태 확인
+```
+# Deployment 롤아웃 히스토리 확인
+kubectl rollout history deployment/my-first-deployment
+Observation: 마지막 버전 번호를 기록해두세요.
+
+# ReplicaSet 목록 확인
 kubectl get rs
-Observation: Make a note of number of replicaSets present.
+Observation: ReplicaSet 개수를 기록해두세요.
 
-# Access the Application 
+# 애플리케이션 접근
 http://<worker-node-ip>:<Node-Port>
-Observation: Make a note of application version
+Observation: 현재 애플리케이션 버전을 확인하세요.
 ```
 
-### Pause Deployment and Two Changes
+### Deployment 일시정지 후 변경 2가지 적용
 ```
-# Pause the Deployment
+# Deployment 일시정지
 kubectl rollout pause deployment/<Deployment-Name>
 kubectl rollout pause deployment/my-first-deployment
 
-# Update Deployment - Application Version from V3 to V4
+# 애플리케이션 버전 V3 -> V4 업데이트
 kubectl set image deployment/my-first-deployment kubenginx=stacksimplify/kubenginx:4.0.0 --record=true
 
-# Check the Rollout History of a Deployment
-kubectl rollout history deployment/my-first-deployment  
-Observation: No new rollout should start, we should see same number of versions as we check earlier with last version number matches which we have noted earlier.
+# 롤아웃 히스토리 확인
+kubectl rollout history deployment/my-first-deployment
+Observation: 새 롤아웃이 진행되지 않고 기존 버전 수가 유지되어야 합니다.
 
-# Get list of ReplicaSets
+# ReplicaSet 확인
 kubectl get rs
-Observation: No new replicaSet created. We should have same number of replicaSets as earlier when we took note. 
+Observation: 새로운 ReplicaSet이 생성되지 않아야 합니다.
 
-# Make one more change: set limits to our container
+# 추가 변경: 리소스 제한 설정
 kubectl set resources deployment/my-first-deployment -c=kubenginx --limits=cpu=20m,memory=30Mi
 ```
-### Resume Deployment 
+
+### Deployment 재개
 ```
-# Resume the Deployment
+# Deployment 재개
 kubectl rollout resume deployment/my-first-deployment
 
-# Check the Rollout History of a Deployment
-kubectl rollout history deployment/my-first-deployment  
-Observation: You should see a new version got created
+# 롤아웃 히스토리 확인
+kubectl rollout history deployment/my-first-deployment
+Observation: 새 버전이 생성되어야 합니다.
 
-# Get list of ReplicaSets
+# ReplicaSet 확인
 kubectl get rs
-Observation: You should see new ReplicaSet.
+Observation: 새 ReplicaSet이 생성되어야 합니다.
 ```
-### Access Application
+
+### 애플리케이션 접근
 ```
-# Access the Application 
+# 애플리케이션 접근
 http://<node1-public-ip>:<Node-Port>
-Observation: You should see Application V4 version
+Observation: Application V4 버전이 보여야 합니다.
 ```
 
-
-## Step-02: Clean-Up
+## Step-02: 정리(Clean-Up)
 ```
-# Delete Deployment
+# Deployment 삭제
 kubectl delete deployment my-first-deployment
 
-# Delete Service
+# Service 삭제
 kubectl delete svc my-first-deployment-service
 
-# Get all Objects from Kubernetes default namespace
+# default 네임스페이스의 모든 객체 확인
 kubectl get all
 ```
+
+## 추가 설명
+- Pause/Resume는 대규모 변경을 일괄 적용할 때 유용합니다.
+- 여러 변경 사항을 적용한 뒤 Resume하면 한 번의 롤아웃으로 처리됩니다.
