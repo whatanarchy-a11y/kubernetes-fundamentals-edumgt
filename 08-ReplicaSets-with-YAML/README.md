@@ -1,6 +1,6 @@
-# ReplicaSets with YAML
+# YAML로 ReplicaSet 만들기
 
-## Step-01: Create ReplicaSet Definition
+## Step-01: ReplicaSet 정의 작성
 - **replicaset-definition.yml**
 ```yml
 apiVersion: apps/v1
@@ -8,15 +8,15 @@ kind: ReplicaSet
 metadata:
   name: myapp2-rs
 spec:
-  replicas: 3 # 3 Pods should exist at all times.
-  selector:  # Pods label should be defined in ReplicaSet label selector
+  replicas: 3 # 항상 3개의 Pod 유지
+  selector:  # ReplicaSet이 관리할 Pod 라벨 선택
     matchLabels:
       app: myapp2
   template:
     metadata:
       name: myapp2-pod
       labels:
-        app: myapp2 # Atleast 1 Pod label should match with ReplicaSet Label Selector
+        app: myapp2 # selector와 매칭되는 라벨 필요
     spec:
       containers:
       - name: myapp2
@@ -24,26 +24,26 @@ spec:
         ports:
           - containerPort: 80
 ```
-## Step-02: Create ReplicaSet
-- Create ReplicaSet with 3 Replicas
+
+## Step-02: ReplicaSet 생성
+- 3개의 복제본을 유지합니다.
 ```
-# Create ReplicaSet
+# ReplicaSet 생성
 kubectl apply -f 02-replicaset-definition.yml
 
-# List Replicasets
+# ReplicaSet 목록 확인
 kubectl get rs
 ```
-- Delete a pod
-- ReplicaSet immediately creates the pod. 
+- Pod를 삭제하면 ReplicaSet이 자동으로 복구합니다.
 ```
-# List Pods
+# Pod 목록 확인
 kubectl get pods
 
-# Delete Pod
+# Pod 삭제
 kubectl delete pod <Pod-Name>
 ```
 
-## Step-03: Create NodePort Service for ReplicaSet
+## Step-03: ReplicaSet용 NodePort Service 생성
 ```yml
 apiVersion: v1
 kind: Service
@@ -57,24 +57,26 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-      nodePort: 31232  
+      nodePort: 31232
 ```
-- Create NodePort Service for ReplicaSet & Test
+- NodePort Service 생성 및 테스트
 ```
-# Create NodePort Service
+# NodePort Service 생성
 kubectl apply -f 03-replicaset-nodeport-servie.yml
 
-# List NodePort Service
+# NodePort Service 목록 확인
 kubectl get svc
 
-# Get Public IP
+# Public IP 확인
 kubectl get nodes -o wide
 
-# Access Application
+# 애플리케이션 접근
 http://<Worker-Node-Public-IP>:<NodePort>
 http://<Worker-Node-Public-IP>:31232
-
 ```
 
-## API References
+## API 레퍼런스
 - **ReplicaSet:** https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#replicaset-v1-apps
+
+## 추가 설명
+- ReplicaSet은 Pod 수를 유지하지만, 롤링 업데이트/롤백은 Deployment가 담당합니다.
