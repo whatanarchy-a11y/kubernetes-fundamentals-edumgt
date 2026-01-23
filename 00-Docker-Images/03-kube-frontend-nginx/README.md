@@ -54,3 +54,4 @@ docker push <your-docker-hub-id>/kube-frontend-nginx:1.0.0
 ## 추가 설명
 - Backend Service 이름이 변경되면 `default.conf`의 `proxy_pass`도 반드시 수정해야 합니다.
 - 로컬 테스트 시 `docker run -p 8080:80`로 동작 여부를 확인할 수 있습니다.
+- 이미지 태그를 환경/버전별로 분리하면 롤백과 재현성이 좋아집니다.

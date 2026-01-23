@@ -24,6 +24,9 @@
 - **Kubernetes vs AWS EKS**
   - EKS는 Control Plane을 AWS에서 관리해주므로 운영 부담이 줄어듭니다.
   - 노드(EC2)는 사용자가 관리하거나, Managed Node Group으로 관리합니다.
+- **Control Plane 고가용성**
+  - 운영 환경에서는 API Server/etcd를 다중화해 장애에 대비합니다.
+  - etcd 백업은 클러스터 복구의 핵심 포인트입니다.
 - **핵심 개념 정리**
   - Pod: 컨테이너를 실행하는 최소 단위
   - ReplicaSet: Pod 복제/복구를 담당

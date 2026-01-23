@@ -87,6 +87,7 @@ http://<WorkerNode-Public-IP>:31231
 ## 추가 설명
 - 매니페스트의 `metadata.labels`와 Service의 `spec.selector`가 일치해야 트래픽이 정상 분배됩니다.
 - NodePort는 학습/테스트용으로 유용하지만, 운영에서는 Ingress/LoadBalancer가 일반적입니다.
+- Service 연결이 잘 되면 `Endpoints` 리소스에 Pod IP가 자동으로 등록됩니다.
 
 ## 트러블슈팅 - 라벨/셀렉터 불일치
 - Service는 생성됐지만 트래픽이 전달되지 않는다면 라벨 매칭을 확인합니다.

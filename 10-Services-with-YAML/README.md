@@ -67,6 +67,7 @@ kubectl get all
 ## 추가 설명
 - Frontend/Backend 통신은 Service 이름 기반의 DNS로 연결됩니다.
 - 잘못된 Service 이름은 502/504 에러의 주요 원인이 됩니다.
+- Backend Service 이름을 바꾸면 Nginx 설정과 매니페스트를 함께 수정해야 합니다.
 
 ## 트러블슈팅 - Service 이름 확인
 - Frontend에서 502/504가 발생하면 Backend Service 이름과 프록시 설정을 확인합니다.
