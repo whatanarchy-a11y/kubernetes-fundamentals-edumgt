@@ -1,46 +1,5 @@
 # Kubernetes - Pod 다루기
 
-## Step 01: Pod 소개
-- **Pod란?**
-  - Kubernetes에서 컨테이너를 실행하는 최소 단위입니다.
-  - 하나 이상의 컨테이너가 **같은 네트워크/스토리지 네임스페이스**를 공유합니다.
-- **멀티 컨테이너 Pod란?**
-  - 사이드카 패턴(로그 수집, 프록시 등)처럼 같은 생명주기를 갖는 컨테이너를 묶어 실행합니다.
-
-## 추가 설명
-- Pod는 재생성될 수 있는 단기(일시적) 리소스이므로, 상태는 외부 스토리지나 별도 서비스로 분리하는 것이 일반적입니다.
-- readiness/liveness probe를 설정하면 장애 감지와 트래픽 분리를 자동화할 수 있습니다.
-
-## Step 02: Pod 데모
-
-### 2-1. 워커 노드 상태 확인
-```bash
-# 워커 노드 상태 확인
-kubectl get nodes
-
-# 워커 노드 상태를 상세 정보와 함께 확인
-kubectl get nodes -o wide
-```
-
-### 2-2. Pod 생성
-```bash
-# 템플릿
-kubectl run <desired-pod-name> --image <container-image> --generator=run-pod/v1
-
-# 예시: Pod 이름과 컨테이너 이미지 지정
-kubectl run my-first-pod --image stacksimplify/kubenginx:1.0.0 --generator=run-pod/v1
-```
-
-**중요 메모: `kubectl run` 동작 변화**
-- 과거 버전에서는 `kubectl run`이 **Deployment** 또는 **Pod**를 만들 수 있었습니다.
-- 이를 명확히 하기 위해 `--generator=run-pod/v1`가 사용되었고, 이는 **Pod만 생성**하도록 강제합니다.
-- 최신 버전(1.18+)에서는 `kubectl run`이 기본적으로 Pod만 생성하며, `--generator`는 비권장입니다.
-
----
----
-
-# Kubernetes - Pod 다루기
-
 ## Step-01: Pod 소개
 - **Pod란?**
   - Kubernetes에서 컨테이너를 실행하는 최소 단위입니다.
@@ -173,9 +132,8 @@ kubectl get deploy,rs,pod | grep my
 - `pod/mypod`만 보이면 Pod만 만든 것
 
 ---
-###
-1) Deployment는 뭐냐?
-
+### Deployment는 뭐냐?
+```
 Kubernetes API에 등록된 리소스 타입(kind) 중 하나
 
 사람이 “원하는 상태”를 선언하면(예: nginx 3개, 이런 이미지로)
@@ -351,8 +309,10 @@ status.readyReplicas: Ready인 Pod 수
 status.updatedReplicas: 새 버전으로 업데이트된 Pod 수
 
 status.conditions: Progressing/Available 등 상태
+```
+---
 
-“가장 많이 쓰는” Deployment 예시 (미니)
+### “가장 많이 쓰는” Deployment 예시 (미니)
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -379,6 +339,7 @@ spec:
       maxSurge: 1
       maxUnavailable: 0
 ```
+
 ---
 
 ### Pod 목록 확인
