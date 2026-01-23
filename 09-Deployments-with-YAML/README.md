@@ -32,3 +32,4 @@ http://<Worker-Node-Public-IP>:31233
 ## 추가 설명
 - Deployment는 ReplicaSet을 자동으로 관리하며 롤링 업데이트를 제공합니다.
 - 라벨/셀렉터 불일치는 Pod가 Service에 연결되지 않는 주요 원인입니다.
+- 배포 전략을 명시하려면 `spec.strategy`로 RollingUpdate/Recreate를 지정할 수 있습니다.

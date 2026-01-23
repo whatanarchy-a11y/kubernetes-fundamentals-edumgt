@@ -80,6 +80,7 @@ http://<Worker-Node-Public-IP>:31232
 
 ## 추가 설명
 - ReplicaSet은 Pod 수를 유지하지만, 롤링 업데이트/롤백은 Deployment가 담당합니다.
+- ReplicaSet 단독 사용은 테스트 목적에 적합하며, 운영에서는 Deployment로 관리하는 편이 일반적입니다.
 
 ## 트러블슈팅 - ReplicaSet 셀렉터 불일치
 - ReplicaSet이 Pod를 관리하지 못하면 `selector.matchLabels`와 `template.metadata.labels` 일치를 확인합니다.

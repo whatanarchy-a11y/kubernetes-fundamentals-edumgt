@@ -72,6 +72,10 @@ kubectl scale --replicas=10 deployment/my-backend-rest-app
 http://<node1-public-ip>:<Node-Port>/hello
 ```
 
+## 추가 설명
+- ClusterIP는 내부 통신의 기본이며, 마이크로서비스 간 안정적인 서비스 디스커버리를 제공합니다.
+- NodePort는 고정 포트를 열기 때문에 보안 그룹/방화벽 규칙도 함께 확인해야 합니다.
+
 ## 추가 학습 예정
 - 클라우드별 기능 차이로 아래 항목은 추후 섹션에서 다룹니다.
   - LoadBalancer

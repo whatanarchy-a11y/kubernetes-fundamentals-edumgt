@@ -9,6 +9,10 @@
   - 확장성(Scale-out) 자동화
   - 선언형으로 원하는 복제 수를 유지
 
+## 추가 설명
+- ReplicaSet은 Pod 수를 유지하는 데 집중하며, 배포 전략(롤링 업데이트/롤백)은 Deployment가 담당합니다.
+- 운영 환경에서는 직접 ReplicaSet을 만들기보다 Deployment로 생성하는 패턴이 일반적입니다.
+
 ## Step-02: ReplicaSet 생성
 
 ### ReplicaSet 생성

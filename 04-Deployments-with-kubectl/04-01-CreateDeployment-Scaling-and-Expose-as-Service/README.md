@@ -72,3 +72,4 @@ http://<worker-node-public-ip>:<Node-Port>
 ## 추가 설명
 - NodePort는 간단한 실습에 적합하지만, 운영에서는 LoadBalancer/Ingress 사용이 일반적입니다.
 - 스케일링 시 ReplicaSet이 필요한 Pod 수를 자동으로 맞춰줍니다.
+- 배포 후 `kubectl rollout status`로 상태를 확인하면 실패 원인을 빠르게 파악할 수 있습니다.
