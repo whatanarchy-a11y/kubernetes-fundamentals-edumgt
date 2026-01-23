@@ -1,6 +1,143 @@
 # Kubernetes Fundamentals
 
-## 목차
+### 분류
+---
+Kubernetes에서 Node / Namespace(NS) / Service / Pod를 “무엇이고, 왜 필요한지, 서로 어떻게 연결되는지” 중심으로 정리한 것입니다.
+---
+
+### Node
+```
+클러스터를 구성하는 실제 머신(가상/물리) 입니다. Pod가 여기 위에서 실행됩니다.
+
+종류
+
+Control Plane Node: API 서버, 스케줄러, 컨트롤러 등 “클러스터 관리”
+
+Worker Node: 실제로 Pod(컨테이너) 를 실행
+
+Node가 하는 일
+
+컨테이너 런타임(containerd 등)로 컨테이너 실행
+
+kubelet이 “내 노드에 떠야 할 Pod”를 받아서 실행/상태보고
+
+자주 쓰는 명령
+
+kubectl get nodes -o wide
+kubectl describe node <node>
+```
+### Namespace (NS)
+```
+클러스터 안의 리소스를 논리적으로 구분하는 “가상 폴더/테넌트” 입니다.
+
+왜 쓰나?
+
+팀/프로젝트/환경(dev, stage, prod) 분리
+
+리소스 이름 충돌 방지(같은 이름의 Service/Pod도 NS가 다르면 가능)
+
+RBAC 권한 분리, ResourceQuota(자원 할당 제한) 적용
+
+특징
+
+대부분 리소스는 Namespace에 속함 (Pod, Service, Deployment 등)
+
+일부는 클러스터 전역(예: Node, PersistentVolume 등)
+
+자주 쓰는 명령
+
+kubectl get ns
+kubectl get all -n <ns>
+```
+
+### Pod
+```
+Kubernetes에서 배포/실행의 최소 단위입니다. “컨테이너 1개 이상”을 묶은 단위.
+
+Pod 안에는?
+
+컨테이너(들)
+
+네트워크/스토리지/환경변수 설정
+
+핵심 특징
+
+Pod는 IP를 하나 받음(컨테이너들이 그 IP를 공유)
+
+Pod 안의 컨테이너들은 localhost로 서로 통신 가능
+
+Pod는 “쉽게 죽고 다시 생기는” 존재(일회성에 가까움)
+
+운영에서는 보통 Pod를 직접 만들기보다
+
+Deployment/StatefulSet/DaemonSet 같은 컨트롤러가 Pod를 생성/유지
+
+자주 쓰는 명령
+
+kubectl get pod -n <ns> -o wide
+kubectl describe pod <pod> -n <ns>
+kubectl logs <pod> -n <ns>
+kubectl exec -it <pod> -n <ns> -- sh
+```
+
+### Service
+```
+Pod는 IP가 바뀌기 쉽습니다(재생성/스케줄링).
+Service는 Pod들을 “고정된 주소(가상 IP/DNS)”로 묶어주는 추상화입니다.
+
+왜 필요?
+
+Pod가 바뀌어도 클라이언트는 항상 같은 주소로 접근
+
+로드밸런싱(여러 Pod로 트래픽 분산)
+
+Service가 연결하는 대상은?
+
+selector(라벨)로 Pod를 선택해서 “Endpoint”를 구성
+
+결과적으로 Service → (Endpoints) → Pod 로 연결
+
+주요 타입
+
+ClusterIP (기본): 클러스터 내부 전용 고정 IP
+
+NodePort: 모든 Node의 특정 포트를 열어 외부에서 접근 가능
+
+LoadBalancer: 클라우드 로드밸런서를 붙여 외부 IP 제공
+
+Headless (clusterIP: None): 로드밸런싱 없이 Pod 개별 DNS 제공(StatefulSet에 자주 사용)
+
+자주 쓰는 명령
+
+kubectl get svc -n <ns>
+kubectl describe svc <svc> -n <ns>
+kubectl get endpoints -n <ns>
+```
+---
+### 한 장으로 연결 관계
+```
+Namespace: 리소스들이 들어가는 “논리 공간”
+
+Node: Pod가 실제로 실행되는 “물리/가상 머신”
+
+Pod: 컨테이너가 실제로 돌아가는 “최소 실행 단위”
+
+Service: 바뀌는 Pod들을 “고정 주소로 묶어주는 진입점”
+
+흐름 예시:
+
+Deployment가 Pod 여러 개 생성
+
+스케줄러가 Pod를 적절한 Node에 배치
+
+Service가 라벨로 Pod를 선택해서 고정 주소 제공
+
+클라이언트는 Service로 접근 → 내부적으로 Pod로 분산
+```
+
+---
+
+## 전체 목차
 
 | 번호 | 학습 내용 |
 | ---- | --------- |
