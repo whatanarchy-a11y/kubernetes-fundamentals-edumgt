@@ -75,14 +75,11 @@ http://<WorkerNode-Public-IP>:<NodePort>
 http://<WorkerNode-Public-IP>:31231
 ```
 
-## API 오브젝트 레퍼런스
-- **Pod:** https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#pod-v1-core
-- **Service:** https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#service-v1-core
-
-## 최신 API 오브젝트 레퍼런스
+## API 오브젝트 레퍼런스 
 - **Pod:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/
 - **Service:** https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
 - **Kubernetes API Reference:** https://kubernetes.io/docs/reference/kubernetes-api/
+
 
 ## 추가 설명
 - 매니페스트의 `metadata.labels`와 Service의 `spec.selector`가 일치해야 트래픽이 정상 분배됩니다.
