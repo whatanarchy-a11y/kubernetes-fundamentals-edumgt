@@ -461,14 +461,75 @@ kubectl delete pod <Pod-Name>
 kubectl delete pod my-first-pod
 ```
 
-
-
-
 ## Step-03: NodePort Service 소개
 - **Service란?** Pod의 동적인 IP를 안정적으로 접근하기 위한 네트워크 추상화입니다.
 - **NodePort Service란?**
   - 모든 노드의 특정 포트를 열어 외부에서 접근 가능하게 합니다.
   - 학습/테스트용으로 유용하지만, 실제 운영에서는 LoadBalancer나 Ingress를 더 많이 사용합니다.
+
+### NodePort Service 설명 (핵심 개념)
+클러스터의 모든 Node(워커/컨트롤플레인 포함 가능)의 특정 포트(노드 포트)를 열어서, 그 포트로 들어오는 트래픽을 Service → Pod로 전달해주는 방식입니다.
+
+```
+Service 타입: NodePort
+
+노드에서 열리는 포트 범위(일반적으로): 30000–32767
+
+외부 접근 형태:
+
+http://<노드IP>:<NodePort> 로 접속
+```
+---
+
+NodePort에서 자주 나오는 포트 3종류
+
+Service YAML에서 보통 이렇게 보입니다.
+
+port: Service가 클러스터 내부에서 제공하는 포트 (가상 포트)
+
+targetPort: 실제 Pod 컨테이너가 리스닝하는 포트
+
+nodePort: 노드에 실제로 열리는 외부 접근 포트
+
+예:
+
+nodePort: 30080 → 외부는 노드IP:30080
+
+port: 80 → 클러스터 내부에서 서비스는 80으로 보임
+
+targetPort: 8080 → Pod 컨테이너는 8080으로 받음
+
+NodePort의 트래픽 흐름
+
+### 외부 사용자
+→ NodeIP:NodePort
+→ (kube-proxy / iptables/IPVS 규칙)
+→ Service(ClusterIP)
+→ Pod IP:targetPort
+
+NodePort 장단점
+
+### 장점
+
+실습/온프레미스에서 간단히 외부 노출 가능
+
+로드밸런서(LB) 없이도 테스트 가능
+
+### 단점
+
+“서비스당 포트”를 하나씩 소비 (포트 관리 번거로움)
+
+보안/운영 관점에서 직접 노드 포트를 열어두는 방식은 제한적일 수 있음
+
+보통 운영에서는 Ingress + LoadBalancer(또는 MetalLB) 같은 구성이 더 일반적
+
+---
+
+```
+# ReplicaSet을 Service로 노출
+kubectl expose rs <ReplicaSet-Name> --type=NodePort --port=80 --target-port=8080 --name=<Service-Name-To-Be-Created>
+kubectl expose rs my-helloworld-rs --type=NodePort --port=80 --target-port=8080 --name=my-helloworld-rs-service
+```
 
 ## Step-04: 데모 - Service로 Pod 외부 노출
 - NodePort Service로 애플리케이션을 외부에서 접근하도록 설정합니다.

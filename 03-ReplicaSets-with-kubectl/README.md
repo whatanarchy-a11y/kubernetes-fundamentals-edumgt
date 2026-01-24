@@ -231,30 +231,292 @@ kubectl get pods -o wide
 ```
 
 ### Pod의 소유자(Owner) 확인
-- Pod YAML의 **ownerReferences.name**에서 소속 ReplicaSet을 확인합니다.
+- Pod YAML의 **ownerReferences.name**에서 소속 ReplicaSet을 확인합니다. 아래의 예시에서
 ```
-kubectl get pods <pod-name> -o yaml
-kubectl get pods my-helloworld-rs-c8rrj -o yaml
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: my-helloworld-rs
+    uid: 10bcb35a-8835-46a8-b221-14e5b5a054d5
 ```
 
+```
+kubectl get pods <pod-name> -o yaml
+
+kubectl get pods my-helloworld-rs-XXXXX -o yaml
+```
+---
+```
+ubuntu@cp1:~/kubernetes-fundamentals-edumgt/03-ReplicaSets-with-kubectl$ kubectl get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE   NOMINATED NODE   READINESS GATES
+my-first-pod             1/1     Running   0          9h      10.42.2.9    w2     <none>           <none>
+my-helloworld-rs-hdqsn   1/1     Running   0          3h23m   10.42.2.12   w2     <none>           <none>
+my-helloworld-rs-jq8v2   1/1     Running   0          3h23m   10.42.2.11   w2     <none>           <none>
+my-helloworld-rs-mn9cd   1/1     Running   0          3h23m   10.42.1.10   w1     <none>           <none>
+my-helloworld-rs-qhbv4   1/1     Running   0          3h23m   10.42.0.23   cp1    <none>           <none>
+my-helloworld-rs-shhpc   1/1     Running   0          3h23m   10.42.0.24   cp1    <none>           <none>
+my-helloworld-rs-vswg5   1/1     Running   0          3h23m   10.42.1.9    w1     <none>           <none>
+nginx-66686b6766-7x2d9   1/1     Running   0          21d     10.42.0.9    cp1    <none>           <none>
+nginx-66686b6766-d4xtt   1/1     Running   0          14d     10.42.0.15   cp1    <none>           <none>
+nginx-66686b6766-frj65   1/1     Running   0          14d     10.42.0.19   cp1    <none>           <none>
+whoami-b85fc56b4-fk6p4   1/1     Running   0          14d     10.42.0.18   cp1    <none>           <none>
+```
+---
+```
+kubectl get pods my-helloworld-rs-qhbv4 -o yaml
+```
+---
+```
+ubuntu@cp1:~/kubernetes-fundamentals-edumgt/03-ReplicaSets-with-kubectl$ kubectl get pods my-helloworld-rs-qhbv4 -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2026-01-24T07:29:56Z"
+  generateName: my-helloworld-rs-
+  generation: 1
+  labels:
+    app: my-helloworld
+  name: my-helloworld-rs-qhbv4
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: my-helloworld-rs
+    uid: 10bcb35a-8835-46a8-b221-14e5b5a054d5
+  resourceVersion: "16622"
+  uid: e8bf4f9d-ab01-4294-8537-79d08413500a
+spec:
+  containers:
+  - image: stacksimplify/kube-helloworld:1.0.0
+    imagePullPolicy: IfNotPresent
+    name: my-helloworld-app
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-bbt69
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: cp1
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-bbt69
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-01-24T10:48:05Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2026-01-24T07:29:56Z"
+    observedGeneration: 1
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-01-24T10:48:05Z"
+    observedGeneration: 1
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-01-24T10:48:05Z"
+    observedGeneration: 1
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-01-24T07:29:56Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://d9cefe2e6e4b9caf576981eb00066af5fef26f11b16085d682b64ee8668e49d8
+    image: docker.io/stacksimplify/kube-helloworld:1.0.0
+    imageID: docker.io/stacksimplify/kube-helloworld@sha256:eae077a33d55d74407e399fd6e3bfb12cfe98dd1be29173861579584cb175ed8
+    lastState: {}
+    name: my-helloworld-app
+    ready: true
+    resources: {}
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-01-24T10:48:03Z"
+    user:
+      linux:
+        gid: 0
+        supplementalGroups:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 6
+        - 10
+        - 11
+        - 20
+        - 26
+        - 27
+        uid: 0
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-bbt69
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.56.10
+  hostIPs:
+  - ip: 192.168.56.10
+  observedGeneration: 1
+  phase: Running
+  podIP: 10.42.0.23
+  podIPs:
+  - ip: 10.42.0.23
+  qosClass: BestEffort
+  startTime: "2026-01-24T07:29:56Z"
+```
+---
 ## Step-03: ReplicaSet을 Service로 노출
 - NodePort Service를 통해 외부에서 접근할 수 있도록 구성합니다.
+
+### NodePort Service 설명 (핵심 개념)
+클러스터의 모든 Node(워커/컨트롤플레인 포함 가능)의 특정 포트(노드 포트)를 열어서, 그 포트로 들어오는 트래픽을 Service → Pod로 전달해주는 방식입니다.
+
+```
+Service 타입: NodePort
+
+노드에서 열리는 포트 범위(일반적으로): 30000–32767
+
+외부 접근 형태:
+
+http://<노드IP>:<NodePort> 로 접속
+```
+---
+
+NodePort에서 자주 나오는 포트 3종류
+
+Service YAML에서 보통 이렇게 보입니다.
+
+port: Service가 클러스터 내부에서 제공하는 포트 (가상 포트)
+
+targetPort: 실제 Pod 컨테이너가 리스닝하는 포트
+
+nodePort: 노드에 실제로 열리는 외부 접근 포트
+
+예:
+
+nodePort: 30080 → 외부는 노드IP:30080
+
+port: 80 → 클러스터 내부에서 서비스는 80으로 보임
+
+targetPort: 8080 → Pod 컨테이너는 8080으로 받음
+
+NodePort의 트래픽 흐름
+
+### 외부 사용자
+→ NodeIP:NodePort
+→ (kube-proxy / iptables/IPVS 규칙)
+→ Service(ClusterIP)
+→ Pod IP:targetPort
+
+NodePort 장단점
+
+### 장점
+
+실습/온프레미스에서 간단히 외부 노출 가능
+
+로드밸런서(LB) 없이도 테스트 가능
+
+### 단점
+
+“서비스당 포트”를 하나씩 소비 (포트 관리 번거로움)
+
+보안/운영 관점에서 직접 노드 포트를 열어두는 방식은 제한적일 수 있음
+
+보통 운영에서는 Ingress + LoadBalancer(또는 MetalLB) 같은 구성이 더 일반적
+
+---
+
 ```
 # ReplicaSet을 Service로 노출
 kubectl expose rs <ReplicaSet-Name> --type=NodePort --port=80 --target-port=8080 --name=<Service-Name-To-Be-Created>
 kubectl expose rs my-helloworld-rs --type=NodePort --port=80 --target-port=8080 --name=my-helloworld-rs-service
-
+```
+---
+```
+ubuntu@cp1:~/kubernetes-fundamentals-edumgt/03-ReplicaSets-with-kubectl$ kubectl expose rs my-helloworld-rs --type=NodePort --port=80 --target-port=8080 --name=my-helloworld-rs-service
+service/my-helloworld-rs-service exposed
+```
 # Service 정보 확인
 kubectl get service
 kubectl get svc
 
+```
+ubuntu@cp1:~/kubernetes-fundamentals-edumgt/03-ReplicaSets-with-kubectl$ kubectl get service
+NAME                       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes                 ClusterIP   10.43.0.1      <none>        443/TCP        21d
+my-helloworld-rs-service   NodePort    10.43.45.254   <none>        80:31885/TCP   29s
+whoami                     ClusterIP   10.43.69.242   <none>        80/TCP         21d
+```
+
 # 워커 노드 Public IP 확인
 kubectl get nodes -o wide
+```
+ubuntu@cp1:~/kubernetes-fundamentals-edumgt/03-ReplicaSets-with-kubectl$ kubectl get nodes -o wide
+NAME   STATUS   ROLES           AGE   VERSION        INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+cp1    Ready    control-plane   21d   v1.34.3+k3s1   192.168.56.10   <none>        Ubuntu 22.04.5 LTS   5.15.0-164-generic   containerd://2.1.5-k3s1
+w1     Ready    <none>          21d   v1.34.3+k3s1   192.168.56.11   <none>        Ubuntu 22.04.5 LTS   5.15.0-164-generic   containerd://2.1.5-k3s1
+w2     Ready    <none>          21d   v1.34.3+k3s1   192.168.56.12   <none>        Ubuntu 22.04.5 LTS   5.15.0-164-generic   containerd://2.1.5-k3s1
+```
+---
 ```
 - **접근 예시**
 ```
 http://<node1-public-ip>:<Node-Port>/hello
+http://192.168.56.11:31885/hello
 ```
+![alt text](image.png)
+
+```
+---
+
 
 ## Step-04: ReplicaSet의 고가용성 테스트
 - Pod를 강제로 삭제해도 ReplicaSet이 자동 복구하는지 확인합니다.
@@ -319,7 +581,3 @@ kubectl delete svc/my-helloworld-rs-service
 kubectl get svc
 ```
 
-## 추가 학습 포인트
-- **Labels & Selectors**
-  - ReplicaSet이 어떤 Pod를 관리할지 결정하는 핵심 개념입니다.
-  - YAML로 매니페스트를 작성하는 섹션에서 더 자세히 다룹니다.
